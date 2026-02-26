@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Block crawling of sensitive paths (if any added in future)
+Disallow: /success.html
+Disallow: /admin
+Disallow: /private
+
+# Slow down aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Allow search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://centaurus-constructions.com/sitemap.xml

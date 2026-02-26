@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Gallery - Centaurus Constructions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse our complete project gallery showing construction, waterproofing, and drain work projects.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0f4c81">
+  <link rel="canonical" href="https://centaurus-constructions.com/gallery.html">
+  <meta property="og:title" content="Project Gallery">
+  <meta property="og:description" content="View all our construction and repair projects.">
+  <meta property="og:image" content="https://centaurus-constructions.com/images/centaurus-hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #003d7a;
+      --primary-dark: #001f4d;
+      --accent: #ff9800;
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --muted: #555555;
+      --white: #ffffff;
+      --success: #10b981;
+      --light-bg: #f5f7fa;
+      --lighter-bg: #fafbfc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .gallery-item {
+      background: var(--white);
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 30px rgba(0, 61, 122, 0.15);
+      border-color: var(--accent);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 61, 122, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-size: 2.5rem;
+    }
+
+    .gallery-caption {
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .lightbox-modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .lightbox-container {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lightbox-image {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .lightbox-caption {
+      color: var(--white);
+      margin-top: 16px;
+      font-size: 0.95rem;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .lightbox-counter {
+      color: var(--accent);
+      margin-top: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .lightbox-controls {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .lightbox-btn {
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .lightbox-btn:hover {
+      background: #f57c00;
+      transform: scale(1.05);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      background: #f57c00;
+      transform: rotate(90deg);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 10000;
+    }
+
+    .lightbox-nav:hover {
+      background: #f57c00;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .lightbox-nav.prev {
+      left: 10px;
+    }
+
+    .lightbox-nav.next {
+      right: 10px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 16px;
+      background: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-dark);
+      transform: translateX(-4px);
+    }
+
+    /* Centered Contact Banner */
+    .contact-banner {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      padding: 50px 30px;
+      text-align: center;
+      margin: 60px auto;
+      border-radius: 8px;
+      box-shadow: 0 16px 40px rgba(0, 61, 122, 0.2);
+      max-width: 600px;
+    }
+
+    .contact-banner h3 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .contact-banner p {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .contact-banner a {
+      color: #ff9800;
+      text-decoration: none;
+      font-weight: 700;
+      transition: opacity 0.2s ease;
+    }
+
+    .contact-banner a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 720px) {
+      .contact-banner {
+        padding: 35px 20px;
+        margin: 40px auto;
+      }
+
+      .contact-banner h3 {
+        font-size: 1.3rem;
+      }
+
+      .contact-banner p {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .contact-banner {
+        padding: 25px 16px;
+        margin: 30px auto;
+      }
+
+      .contact-banner h3 {
+        font-size: 1.1rem;
+      }
+
+      .contact-banner p {
+        font-size: 0.9rem;
+      }
+    }
+
+    footer {
+      background: var(--primary);
+      color: var(--white);
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+
+      .lightbox-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+
+      .lightbox-close {
+        width: 35px;
+        height: 35px;
+        font-size: 1.3rem;
+        top: 10px;
+        right: 10px;
+      }
+
+      .lightbox-controls {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .lightbox-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Project Gallery</h1>
+    <p>Explore all our construction projects</p>
+  </header>
+
+  <div class="container">
+    <a href="index.html" class="back-btn">← Back to Home</a>
+    
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Gallery items will be generated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightboxModal" class="lightbox-modal" role="dialog" aria-modal="true" aria-label="Project image viewer" tabindex="-1">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close image viewer">✕</button>
+    <button class="lightbox-nav prev" onclick="prevImage()" aria-label="Previous image">❮</button>
+    <button class="lightbox-nav next" onclick="nextImage()" aria-label="Next image">❯</button>
+    
+    <div class="lightbox-container">
+      <img id="lightboxImage" class="lightbox-image" src="" alt="Project photo">
+      <div class="lightbox-counter"><span id="currentPhoto">1</span> / <span id="totalPhotos">0</span></div>
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <!-- CENTERED CONTACT BANNER -->
+  <div class="contact-banner">
+    <h3>Get in Touch</h3>
+    <p>© 2026 Centaurus Constructions</p>
+    <p style="margin-bottom: 20px; margin-top: 8px;">3515 Kariya Dr, Mississauga, ON L5B 0C1</p>
+    <p style="font-size: 1.2rem;">
+      📞 <a href="tel:+14372143053">+1 437‑214‑3053</a>
+    </p>
+  </div>
+
+  <footer>
+    <p>© 2026 Centaurus Constructions. All rights reserved.</p>
+    <p>📞 <a href="tel:+14372143053" style="color: var(--accent); text-decoration: none;font-weight: 600;">+1 437‑214‑3053</a> | 📧 <a href="mailto:centaurus.construction.corp@gmail.com" style="color: var(--accent); text-decoration: none; font-weight: 600;">centaurus.construction.corp@gmail.com</a></p>
+  </footer>
+
+  <script>
+    // Gallery data - Add more photos here as needed!
+    const allPhotos = [
+      { image: 'images/1.webp', caption: 'Professional drain works installation.' },
+      { image: 'images/2.webp', caption: 'Waterproofing project with quality finish.' },
+      { image: 'images/3.webp', caption: 'Interior renovation and demolition work.' },
+      { image: 'images/4.webp', caption: 'Camera inspection and diagnostic service.' },
+      { image: 'images/5.webp', caption: 'Basement waterproofing solutions.' },
+      { image: 'images/6.webp', caption: 'Drain system replacement and repair.' },
+      { image: 'images/7.webp', caption: 'Foundation waterproofing expertise.' },
+      { image: 'images/8.webp', caption: 'Professional demolition and cleanout.' },
+      { image: 'images/9.webp', caption: 'Comprehensive construction services.' },
+      { image: 'images/10.webp', caption: 'Advanced pipe inspection technology.' },
+      { image: 'images/11.webp', caption: 'Quality workmanship on every project.' }
+      // Add more photos here: { image: 'images/12.webp', caption: 'Your caption here.' }
+    ];
+
+    let currentPhotoIndex = 0;
+
+    // Generate gallery grid
+    function initGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      
+      allPhotos.forEach((photo, index) => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.onclick = () => openLightbox(index);
+        // use thumbnail for grid and full webp for lightbox
+        const base = photo.image.replace('.webp','');
+        const thumb = base.replace('images/','images/thumbs/') + '-thumb.jpg';
+        const imageName = base.replace('images/', '');
+        const baseResponsive = `images/responsive/${imageName}`; // images/responsive/1
+        const srcset = `${baseResponsive}-480.webp 480w, ${baseResponsive}-800.webp 800w, ${baseResponsive}-1200.webp 1200w`;
+        item.innerHTML = `
+          <picture>
+            <source type="image/webp" srcset="${srcset}" sizes="(max-width:600px) 100vw, 25vw">
+            <img class="gallery-image" src="${thumb}" alt="${photo.caption}" loading="lazy" decoding="async">
+          </picture>
+          <div class="gallery-overlay">🔍</div>
+          <div class="gallery-caption">${photo.caption}</div>
+        `;
+        grid.appendChild(item);
+      });
+      
+      document.getElementById('totalPhotos').textContent = allPhotos.length;
+    }
+
+    function openLightbox(index) {
+      currentPhotoIndex = index;
+      const photo = allPhotos[currentPhotoIndex];
+      
+      const lbImg = document.getElementById('lightboxImage');
+      lbImg.src = photo.image;
+      // set responsive srcset for lightbox - point to images/responsive/
+      const imageName = photo.image.replace('images/', '').replace('.webp', '');
+      const base = `images/responsive/${imageName}`;
+      lbImg.srcset = `${base}-480.webp 480w, ${base}-800.webp 800w, ${base}-1200.webp 1200w`;
+      lbImg.sizes = '100vw';
+      document.getElementById('lightboxCaption').textContent = photo.caption;
+      document.getElementById('currentPhoto').textContent = currentPhotoIndex + 1;
+      
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      document.addEventListener('keydown', handleKeyboard);
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleKeyboard);
+    }
+
+    function nextImage() {
+      currentPhotoIndex = (currentPhotoIndex + 1) % allPhotos.length;
+      updateLightbox();
+    }
+
+    function prevImage() {
+      currentPhotoIndex = (currentPhotoIndex - 1 + allPhotos.length) % allPhotos.length;
+      updateLightbox();
+    }
+
+    function updateLightbox() {
+      const photo = allPhotos[currentPhotoIndex];
+      const lbImg = document.getElementById('lightboxImage');
+      lbImg.src = photo.image;
+      // set responsive srcset - point to images/responsive/
+      const imageName = photo.image.replace('images/', '').replace('.webp', '');
+      const base = `images/responsive/${imageName}`;
+      lbImg.srcset = `${base}-480.webp 480w, ${base}-800.webp 800w, ${base}-1200.webp 1200w`;
+      lbImg.sizes = '100vw';
+      document.getElementById('lightboxCaption').textContent = photo.caption;
+      document.getElementById('currentPhoto').textContent = currentPhotoIndex + 1;
+    }
+
+    function handleKeyboard(e) {
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'Escape') closeLightbox();
+    }
+
+    // Close on outside click
+    document.getElementById('lightboxModal').addEventListener('click', (e) => {
+      if (e.target.id === 'lightboxModal') closeLightbox();
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initGallery);
+  </script>
+
+</body>
+</html>
