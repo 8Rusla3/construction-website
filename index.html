@@ -1810,9 +1810,10 @@
     </div>
 
     <div class="card" style="padding:25px;">
-      <form name="appointment" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/success.html">
+      <form name="appointment" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/">
         <input type="hidden" name="form-name" value="appointment">
         <input type="hidden" name="bot-field">
+        <input type="hidden" name="_redirect" value="/success.html">
 
         <div class="form-grid">
           <div class="form-field">
@@ -1938,9 +1939,10 @@
           <a href="tel:+14372143053" class="btn btn-outline" style="color: var(--primary-dark); border-color: rgba(15,76,129,0.3);">Call Now</a>
           <a href="sms:+14372143053" class="btn btn-secondary">SMS</a>
 
-          <form class="callback-form" name="callback" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/success.html">
+          <form class="callback-form" name="callback" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/">
             <input type="hidden" name="form-name" value="callback">
             <input type="hidden" name="bot-field">
+            <input type="hidden" name="_redirect" value="/success.html">
               <label for="cb-name">Full Name</label>
               <input type="text" name="name" id="cb-name" required>
               <label for="cb-phone">Phone Number</label>
@@ -2076,9 +2078,10 @@
       <button id="popup-close">✕</button>
       <h2 class="popup-title">Free Drain Inspection</h2>
       <p class="popup-subtitle">Get a professional camera inspection ($200 value) when you book this week.</p>
-      <form id="popup-form" name="lead-magnet" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/success.html" class="popup-form">
+      <form id="popup-form" name="lead-magnet" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/" class="popup-form">
         <input type="hidden" name="form-name" value="lead-magnet">
         <input type="hidden" name="bot-field">
+        <input type="hidden" name="_redirect" value="/success.html">
         <input type="text" name="name" id="lm-name" placeholder="Your Name" required>
         <input type="tel" name="phone" id="lm-phone" placeholder="Phone Number" required>
         <input type="email" name="email" id="lm-email" placeholder="Email Address" required>
