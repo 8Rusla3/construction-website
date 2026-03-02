@@ -3,7 +3,6 @@
 // CSP-safe: no inline scripts
 // ===============================
 
-// Масив фото для головної сторінки
 const galleryPhotos = [
     { image: 'images/1.webp', caption: 'Professional drain works installation.' },
     { image: 'images/2.webp', caption: 'Waterproofing project with quality finish.' },
@@ -79,7 +78,7 @@ function prevImage() {
     updateLightbox();
 }
 
-// Оновити фото в лайтбоксі
+// Оновити фото
 function updateLightbox() {
     const photo = galleryPhotos[currentPhotoIndex];
     if (!photo) return;
@@ -115,7 +114,6 @@ function handleLightboxKeyboard(e) {
 
 // Ініціалізація
 document.addEventListener('DOMContentLoaded', () => {
-    // Клік по фото
     document.querySelectorAll('.gallery-item[data-id]').forEach(item => {
         const id = parseInt(item.dataset.id, 10);
         if (!isNaN(id)) {
@@ -123,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Закриття по overlay
     const modal = document.getElementById('lightbox');
     if (modal) {
         modal.addEventListener('click', e => {
@@ -131,13 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Кнопки
     const closeBtn = document.querySelector('.lightbox-close');
     if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
 
-    const prevBtn = document.querySelector('.lightbox-nav.prev');
+    const prevBtn = document.querySelector('.lightbox-prev');
     if (prevBtn) prevBtn.addEventListener('click', prevImage);
 
-    const nextBtn = document.querySelector('.lightbox-nav.next');
+    const nextBtn = document.querySelector('.lightbox-next');
     if (nextBtn) nextBtn.addEventListener('click', nextImage);
 });
