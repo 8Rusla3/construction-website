@@ -108,20 +108,6 @@ function initActiveNav() {
 }
 
 // ============================================
-// GALLERY LIGHTBOX
-// ============================================
-function initGallery() {
-  // New lightbox modal initialization - all functionality handled by onclick handlers and global functions
-  const modal = document.getElementById('lightboxModal');
-  if (modal) {
-    // Prevention of event bubbling
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeLightbox();
-    });
-  }
-}
-
-// ============================================
 // FORM VALIDATION & ENHANCEMENT
 // ============================================
 function initFormValidation() {
@@ -550,133 +536,12 @@ function initDateTimeConstraints() {
 }
 
 // ============================================
-// LIGHTBOX GALLERY
-// ============================================
-const galleryPhotos = [
-  { image: 'images/1.webp', caption: 'Professional drain works installation.' },
-  { image: 'images/2.webp', caption: 'Waterproofing project with quality finish.' },
-  { image: 'images/3.webp', caption: 'Interior renovation and demolition work.' },
-  { image: 'images/4.webp', caption: 'Camera inspection and diagnostic service.' },
-  { image: 'images/5.webp', caption: 'Basement waterproofing solutions.' },
-  { image: 'images/6.webp', caption: 'Drain system replacement and repair.' },
-  { image: 'images/7.webp', caption: 'Foundation waterproofing expertise.' },
-  { image: 'images/8.webp', caption: 'Professional demolition and cleanout.' },
-  { image: 'images/9.webp', caption: 'Comprehensive construction services.' },
-  { image: 'images/10.webp', caption: 'Advanced pipe inspection technology.' }
-];
-
-let currentPhotoIndex = 0;
-
-function openLightbox(photoNumber) {
-  currentPhotoIndex = photoNumber - 1;
-  const modal = document.getElementById('lightboxModal');
-  const photo = galleryPhotos[currentPhotoIndex];
-  
-  const lbImg = document.getElementById('lightboxImage');
-  lbImg.src = photo.image;
-  // set responsive srcset for lightbox - point to images/responsive/
-  const imageName = photo.image.replace('images/', '').replace('.webp', '');
-  const base = `images/responsive/${imageName}`;
-  lbImg.srcset = `${base}-480.webp 480w, ${base}-800.webp 800w, ${base}-1200.webp 1200w`;
-  lbImg.sizes = '100vw';
-  document.getElementById('lightboxCaption').textContent = photo.caption;
-  document.getElementById('currentPhoto').textContent = photoNumber;
-  
-  // save last focused element to restore focus when closing
-  try {
-    window._lastFocusedElement = document.activeElement;
-  } catch (e) {
-    window._lastFocusedElement = null;
-  }
-
-  // mark main content as hidden to assist screen readers
-  const mainEl = document.querySelector('main');
-  if (mainEl) mainEl.setAttribute('aria-hidden', 'true');
-
-  modal.setAttribute('aria-hidden', 'false');
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-
-  // focus close button for keyboard users
-  const closeBtn = document.querySelector('.lightbox-close, #lightbox-close');
-  if (closeBtn && typeof closeBtn.focus === 'function') {
-    closeBtn.focus();
-  } else if (modal && typeof modal.focus === 'function') {
-    modal.focus();
-  }
-
-  // Add keyboard navigation
-  document.addEventListener('keydown', handleLightboxKeyboard);
-}
-
-function closeLightbox() {
-  const modal = document.getElementById('lightboxModal');
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
-  // Restore aria-hidden on main and cleanup
-  const mainEl = document.querySelector('main');
-  if (mainEl) mainEl.removeAttribute('aria-hidden');
-
-  modal.setAttribute('aria-hidden', 'true');
-
-  // Remove keyboard navigation
-  document.removeEventListener('keydown', handleLightboxKeyboard);
-
-  // restore previous focus
-  try {
-    if (window._lastFocusedElement && typeof window._lastFocusedElement.focus === 'function') {
-      window._lastFocusedElement.focus();
-    }
-  } catch (e) {
-    // ignore
-  }
-}
-
-function nextImage() {
-  currentPhotoIndex = (currentPhotoIndex + 1) % galleryPhotos.length;
-  updateLightbox();
-}
-
-function prevImage() {
-  currentPhotoIndex = (currentPhotoIndex - 1 + galleryPhotos.length) % galleryPhotos.length;
-  updateLightbox();
-}
-
-function updateLightbox() {
-  const photo = galleryPhotos[currentPhotoIndex];
-  const lbImg = document.getElementById('lightboxImage');
-  lbImg.src = photo.image;
-  // set responsive srcset - point to images/responsive/
-  const imageName = photo.image.replace('images/', '').replace('.webp', '');
-  const base = `images/responsive/${imageName}`;
-  lbImg.srcset = `${base}-480.webp 480w, ${base}-800.webp 800w, ${base}-1200.webp 1200w`;
-  lbImg.sizes = '100vw';
-  document.getElementById('lightboxCaption').textContent = photo.caption;
-  document.getElementById('currentPhoto').textContent = currentPhotoIndex + 1;
-}
-
-function handleLightboxKeyboard(e) {
-  if (e.key === 'ArrowRight') nextImage();
-  if (e.key === 'ArrowLeft') prevImage();
-  if (e.key === 'Escape') closeLightbox();
-}
-
-// Close lightbox when clicking outside the image
-document.addEventListener('click', (e) => {
-  const modal = document.getElementById('lightboxModal');
-  if (modal && modal.classList.contains('active') && e.target === modal) {
-    closeLightbox();
-  }
-});
-
-// ============================================
 // INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
   initMotionPreferences();
   initMobileMenu();
   initActiveNav();
-  initGallery();
   initDateTimeConstraints();
   initFormValidation();
   initPhoneFormatting();
