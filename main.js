@@ -105,6 +105,7 @@ function initActiveNav() {
   }, 100);
 
   window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav(); // Set correct state on load and when landing with hash
 }
 
 // ============================================
@@ -330,7 +331,7 @@ function initLeadMagnetPopup() {
     document.body.style.overflow = '';
   }
 
-  closeBtn.addEventListener('click', closePopup);
+  if (closeBtn) closeBtn.addEventListener('click', closePopup);
   popup.addEventListener('click', (e) => {
     if (e.target === popup) closePopup();
   });

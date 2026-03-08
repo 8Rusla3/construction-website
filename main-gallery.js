@@ -112,6 +112,25 @@ function handleLightboxKeyboard(e) {
     if (e.key === 'Escape') closeLightbox();
 }
 
+// Touch swipe for mobile (prev/next)
+function initLightboxTouch(modal) {
+    if (!modal) return;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    modal.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    modal.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        const minSwipe = 50;
+        if (Math.abs(diff) >= minSwipe) {
+            if (diff > 0) nextImage();
+            else prevImage();
+        }
+    }, { passive: true });
+}
+
 // Ініціалізація
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.gallery-item[data-id]').forEach(item => {
@@ -126,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.addEventListener('click', e => {
             if (e.target === modal) closeLightbox();
         });
+        initLightboxTouch(modal);
     }
 
     const closeBtn = document.getElementById('lightbox-close');
