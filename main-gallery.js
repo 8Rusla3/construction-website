@@ -26,7 +26,7 @@ function openLightbox(photoNumber) {
     const photo = galleryPhotos[currentPhotoIndex];
     if (!modal || !photo) return;
 
-    const lbImg = document.getElementById('lightbox-img');
+    const lbImg = document.getElementById('lightbox-image');
     if (lbImg) {
         lbImg.src = photo.image;
 
@@ -47,7 +47,7 @@ function openLightbox(photoNumber) {
     const currentEl = document.getElementById('lightbox-current');
     if (currentEl) currentEl.textContent = photoNumber;
 
-    modal.classList.add('active');
+    modal.classList.add('visible');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
@@ -59,7 +59,7 @@ function closeLightbox() {
     const modal = document.getElementById('lightbox');
     if (!modal) return;
 
-    modal.classList.remove('active');
+    modal.classList.remove('visible');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 
@@ -83,7 +83,7 @@ function updateLightbox() {
     const photo = galleryPhotos[currentPhotoIndex];
     if (!photo) return;
 
-    const lbImg = document.getElementById('lightbox-img');
+    const lbImg = document.getElementById('lightbox-image');
     if (lbImg) {
         lbImg.src = photo.image;
 
@@ -128,12 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const closeBtn = document.querySelector('.lightbox-close');
+    const closeBtn = document.getElementById('lightbox-close');
     if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
 
-    const prevBtn = document.querySelector('.lightbox-prev');
+    const prevBtn = document.getElementById('lightbox-prev');
     if (prevBtn) prevBtn.addEventListener('click', prevImage);
 
-    const nextBtn = document.querySelector('.lightbox-next');
+    const nextBtn = document.getElementById('lightbox-next');
     if (nextBtn) nextBtn.addEventListener('click', nextImage);
 });
