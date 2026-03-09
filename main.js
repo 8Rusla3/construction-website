@@ -28,7 +28,6 @@ function safeLocalStorage(action, key, value = null) {
       return localStorage.getItem(key);
     }
   } catch (e) {
-    // localStorage quota exceeded or disabled (silently fail)
     return null;
   }
 }
@@ -42,7 +41,6 @@ function initMobileMenu() {
   const navCta = document.querySelector('.nav-cta');
   
   if (hamburger) {
-    // Initialize ARIA
     hamburger.setAttribute('aria-expanded', 'false');
 
     hamburger.addEventListener('click', () => {
@@ -52,7 +50,6 @@ function initMobileMenu() {
       hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 
-    // Close menu when link clicked
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
         hamburger.classList.remove('active');
@@ -87,7 +84,7 @@ function initActiveNav() {
 
   const updateActiveNav = debounce(() => {
     let current = '';
-    const scrollY = window.scrollY || window.pageYOffset; // Handle both modern & legacy
+    const scrollY = window.scrollY || window.pageYOffset;
     
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
@@ -105,11 +102,11 @@ function initActiveNav() {
   }, 100);
 
   window.addEventListener('scroll', updateActiveNav, { passive: true });
-  updateActiveNav(); // Set correct state on load and when landing with hash
+  updateActiveNav();
 }
 
 // ============================================
-// FORM VALIDATION & ENHANCEMENT
+// FORM VALIDATION
 // ============================================
 function initFormValidation() {
   const forms = document.querySelectorAll('form[name]');
@@ -118,19 +115,14 @@ function initFormValidation() {
     const submitBtn = form.querySelector('button[type="submit"]');
     const inputs = form.querySelectorAll('.form-input, .form-textarea, .form-select');
 
-    // Real-time validation
     inputs.forEach(input => {
       input.addEventListener('blur', () => validateField(input));
       input.addEventListener('input', () => {
-        if (input.classList.contains('error')) {
-          validateField(input);
-        }
+        if (input.classList.contains('error')) validateField(input);
       });
     });
 
-    // Form submission
     form.addEventListener('submit', (e) => {
-      // Prevent double submission
       if (submitBtn.dataset.submitted === 'true') {
         e.preventDefault();
         return;
@@ -157,28 +149,22 @@ function validateField(input) {
   const value = input.value.trim();
   let isValid = true;
 
-  // Remove previous error state
   input.classList.remove('error');
   const errorMsg = input.nextElementSibling;
-  if (errorMsg && errorMsg.classList.contains('error-message')) {
-    errorMsg.remove();
-  }
+  if (errorMsg && errorMsg.classList.contains('error-message')) errorMsg.remove();
 
   if (input.hasAttribute('required') && !value) {
     isValid = false;
   } else if (input.type === 'email' && value) {
-    // RFC 5322 simplified email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     if (!emailRegex.test(value)) isValid = false;
   } else if (input.type === 'tel' && value) {
-    // Allow digits, spaces, +, -, (, )
     const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
     if (!phoneRegex.test(value)) isValid = false;
   }
 
   if (!isValid) {
     input.classList.add('error');
-    // Create error message safely
     const errorMsg = document.createElement('span');
     errorMsg.classList.add('error-message');
     const fieldType = input.getAttribute('type') || input.tagName.toLowerCase();
@@ -198,13 +184,10 @@ function initPhoneFormatting() {
   phoneInputs.forEach(input => {
     input.addEventListener('input', (e) => {
       let value = e.target.value.replace(/\D/g, '');
-      if (value.length > 10) {
-        value = value.slice(0, 10);
-      }
+      if (value.length > 10) value = value.slice(0, 10);
       e.target.value = value;
     });
 
-    // Copy to clipboard with fallback
     input.addEventListener('contextmenu', (e) => {
       if (input.value) {
         e.preventDefault();
@@ -214,17 +197,14 @@ function initPhoneFormatting() {
   });
 }
 
-// Clipboard utility with fallback for older browsers
 function copyToClipboard(text, message) {
   if (navigator.clipboard && window.isSecureContext) {
-    // Modern secure context (HTTPS)
     navigator.clipboard.writeText(text).then(() => {
       showToast(message);
     }).catch(() => {
       copyToClipboardFallback(text, message);
     });
   } else {
-    // Fallback for HTTP or older browsers
     copyToClipboardFallback(text, message);
   }
 }
@@ -237,12 +217,8 @@ function copyToClipboardFallback(text, message) {
   document.body.appendChild(textarea);
   textarea.select();
   try {
-    if (document.execCommand('copy')) {
-      showToast(message);
-    }
-  } catch (err) {
-    // Silent fail
-  }
+    if (document.execCommand('copy')) showToast(message);
+  } catch (err) {}
   document.body.removeChild(textarea);
 }
 
@@ -261,18 +237,14 @@ function initAccordion() {
     header.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
 
-      // Close all other items
       accordionItems.forEach(otherItem => {
         if (otherItem !== item) {
           otherItem.classList.remove('active');
           const otherContent = otherItem.querySelector('.accordion-content');
-          if (otherContent) {
-            otherContent.style.maxHeight = '0px';
-          }
+          if (otherContent) otherContent.style.maxHeight = '0px';
         }
       });
 
-      // Toggle current item
       item.classList.toggle('active');
       if (isActive) {
         content.style.maxHeight = '0px';
@@ -294,14 +266,11 @@ function initLeadMagnetPopup() {
 
   if (!popup) return;
 
-  // Show popup after 10 seconds or on scroll 50%
   let popupShown = safeLocalStorage('get', 'popupShown');
   let scrollTriggered = false;
 
   if (!popupShown) {
-    setTimeout(() => {
-      showPopup();
-    }, 10000);
+    setTimeout(() => showPopup(), 10000);
 
     window.addEventListener('scroll', () => {
       if (!scrollTriggered && window.scrollY > document.documentElement.scrollHeight * 0.5) {
@@ -351,13 +320,10 @@ function initLazyLoading() {
           observer.unobserve(img);
         }
       });
-    }, {
-      rootMargin: '50px'
-    });
+    }, { rootMargin: '50px' });
 
     images.forEach(img => observer.observe(img));
   } else {
-    // Fallback for older browsers
     images.forEach(img => {
       img.src = img.dataset.lazy;
       img.removeAttribute('data-lazy');
@@ -370,31 +336,23 @@ function initLazyLoading() {
 // ============================================
 function trackEvent(category, action, label) {
   if (typeof gtag === 'undefined') return;
-  
-  // Sanitize all parameters to prevent injection
+
   const sanitizedCategory = sanitizeInput(String(category));
   const sanitizedAction = sanitizeInput(String(action));
   const sanitizedLabel = sanitizeInput(String(label));
-  
-  // Validate lengths (prevent spam)
-  if (sanitizedCategory.length > 40 || sanitizedAction.length > 40 || sanitizedLabel.length > 500) {
-    return; // Silently reject
-  }
-  
+
+  if (sanitizedCategory.length > 40 || sanitizedAction.length > 40 || sanitizedLabel.length > 500) return;
+
   try {
     gtag('event', sanitizedAction, {
       'event_category': sanitizedCategory,
       'event_label': sanitizedLabel
     });
-  } catch (e) {
-    // Analytics error - fail silently
-  }
+  } catch (e) {}
 }
 
-// Track phone clicks
 function initPhoneTracking() {
   const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-  
   phoneLinks.forEach(link => {
     link.addEventListener('click', () => {
       trackEvent('engagement', 'phone_click', link.getAttribute('href'));
@@ -402,10 +360,8 @@ function initPhoneTracking() {
   });
 }
 
-// Track social links
 function initSocialTracking() {
   const socialLinks = document.querySelectorAll('a[target="_blank"]');
-  
   socialLinks.forEach(link => {
     link.addEventListener('click', () => {
       trackEvent('engagement', 'social_click', link.getAttribute('href'));
@@ -413,10 +369,8 @@ function initSocialTracking() {
   });
 }
 
-// Track CTA buttons
 function initCTATracking() {
   const ctaButtons = document.querySelectorAll('.btn-primary');
-  
   ctaButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const text = btn.textContent.trim();
@@ -442,11 +396,10 @@ function showToast(message, duration = 3000) {
 }
 
 // ============================================
-// ACCESSIBILITY - RESPECT MOTION PREFERENCES
+// ACCESSIBILITY
 // ============================================
 function initMotionPreferences() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // User prefers reduced motion - disable animations
     const styleEl = document.createElement('style');
     styleEl.textContent = `
       * {
@@ -461,68 +414,32 @@ function initMotionPreferences() {
 }
 
 // ============================================
-// INITIALIZATION
-// ============================================
-// ============================================
 // APPOINTMENT DATE & TIME CONSTRAINTS
 // ============================================
 function initDateTimeConstraints() {
   const dateInput = document.getElementById('preferred-date');
   const timeInput = document.getElementById('preferred-time');
-  
+
   if (dateInput) {
-    // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
     dateInput.setAttribute('min', today);
-    
-    // Validate selected day is not Sunday (optional closer day)
-    dateInput.addEventListener('change', (e) => {
-      const selectedDate = new Date(e.target.value + 'T00:00:00');
-      const dayOfWeek = selectedDate.getDay();
-      
-      // Allow all days but show info if Sunday
-      if (dayOfWeek === 0) {
-        // Sunday - limited hours (9am-5pm)
-        if (timeInput.value) {
-          const [hours] = timeInput.value.split(':');
-          const hour = parseInt(hours);
-          if (hour < 9 || hour >= 17) {
-            showToast('Sunday hours: 9:00 AM - 5:00 PM');
-            timeInput.value = '';
-          }
-        }
-      }
-    });
   }
-  
+
   if (timeInput) {
-    // Set working hours constraints (8am-6pm on weekdays, 9am-5pm on Sunday)
     timeInput.addEventListener('change', (e) => {
       const dateValue = dateInput ? dateInput.value : null;
+
       if (!dateValue) {
         showToast('Please select a date first');
         e.target.value = '';
         return;
       }
-      
-      const selectedDate = new Date(dateValue + 'T00:00:00');
-      const dayOfWeek = selectedDate.getDay();
-      const [hours, minutes] = e.target.value.split(':').map(Number);
-      const totalMinutes = hours * 60 + minutes;
-      
-      // Check working hours
-      if (dayOfWeek === 0) {
-        // Sunday: 9am-5pm
-        if (hours < 9 || hours >= 17) {
-          showToast('Sunday availability: 9:00 AM - 5:00 PM');
-          e.target.value = '';
-        }
-      } else {
-        // Monday-Saturday: 8am-6pm
-        if (hours < 8 || hours >= 18) {
-          showToast('Working hours: 8:00 AM - 6:00 PM Monday-Saturday');
-          e.target.value = '';
-        }
+
+      const [hours] = e.target.value.split(':').map(Number);
+
+      if (hours < 7 || hours >= 21) {
+        showToast('Working hours: 7:00 AM - 9:00 PM (Monday–Sunday)');
+        e.target.value = '';
       }
     });
   }
@@ -569,21 +486,21 @@ function showCookieBanner() {
 }
 
 function loadAnalytics() {
-  // Replace G-XXXXXXXXXX with real GA4 ID before deploying
   const GA_ID = 'G-XXXXXXXXXX';
-  if (!GA_ID || GA_ID.includes('X')) return; // skip if not configured
+  if (!GA_ID || GA_ID.includes('X')) return;
+
   const s1 = document.createElement('script');
   s1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
   s1.async = true;
   document.head.appendChild(s1);
+
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);} // eslint-disable-line no-inner-declarations
+  function gtag(){dataLayer.push(arguments);}
   window.gtag = gtag;
+
   gtag('js', new Date());
   gtag('config', GA_ID);
 }
-
-// Init cookie banner and optionally load analytics on consent
 document.addEventListener('DOMContentLoaded', () => {
   const consent = localStorage.getItem('cc_consent');
   if (consent === 'yes') loadAnalytics();
