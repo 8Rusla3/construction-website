@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Playwright / test artifacts
+test-results/
+playwright-report/
+blob-report/
+
+# OS
+.DS_Store
+
+# Build output (if added later)
+dist/
+build/
+
+# Logs
+*.log
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example

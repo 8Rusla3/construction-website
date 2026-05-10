@@ -5,11 +5,23 @@
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://centaurusgroup.ca/gallery</loc>
+    <loc>https://centaurusgroup.ca/construction.html</loc>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://centaurusgroup.ca/tree-services.html</loc>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://centaurusgroup.ca/contact.html</loc>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://centaurusgroup.ca/gallery.html</loc>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://centaurusgroup.ca/success</loc>
+    <loc>https://centaurusgroup.ca/success.html</loc>
     <priority>0.50</priority>
   </url>
 </urlset>

@@ -4,27 +4,29 @@
 // ===============================
 
 const galleryPhotos = [
-    { image: 'images/1.webp', caption: 'Professional drain works installation.' },
-    { image: 'images/2.webp', caption: 'Waterproofing project with quality finish.' },
-    { image: 'images/3.webp', caption: 'Interior renovation and demolition work.' },
-    { image: 'images/4.webp', caption: 'Camera inspection and diagnostic service.' },
-    { image: 'images/5.webp', caption: 'Basement waterproofing solutions.' },
-    { image: 'images/6.webp', caption: 'Drain system replacement and repair.' },
-    { image: 'images/7.webp', caption: 'Foundation waterproofing expertise.' },
-    { image: 'images/8.webp', caption: 'Professional demolition and cleanout.' },
-    { image: 'images/9.webp', caption: 'Comprehensive construction services.' },
-    { image: 'images/10.webp', caption: 'Advanced pipe inspection technology.' }
+    { image: 'images/1.webp', caption: 'Commercial drain installation and tie-in.' },
+    { image: 'images/2.webp', caption: 'Exterior waterproofing with finished grade.' },
+    { image: 'images/3.webp', caption: 'Interior renovation and selective demolition.' },
+    { image: 'images/4.webp', caption: 'Sewer camera inspection and diagnostics.' },
+    { image: 'images/5.webp', caption: 'Basement waterproofing detail work.' },
+    { image: 'images/6.webp', caption: 'Drain line replacement and reinstatement.' },
+    { image: 'images/7.webp', caption: 'Foundation waterproofing at footing level.' },
+    { image: 'images/8.webp', caption: 'Structural demolition and debris removal.' },
+    { image: 'images/9.webp', caption: 'General construction and site finishing.' },
+    { image: 'images/10.webp', caption: 'CCTV pipe inspection equipment on site.' }
 ];
 
 let currentPhotoIndex = 0;
+let lightboxPreviousFocus = null;
 
-// Відкрити лайтбокс
 function openLightbox(photoNumber) {
     currentPhotoIndex = photoNumber - 1;
 
     const modal = document.getElementById('lightbox');
     const photo = galleryPhotos[currentPhotoIndex];
     if (!modal || !photo) return;
+
+    lightboxPreviousFocus = document.activeElement;
 
     const lbImg = document.getElementById('lightbox-image');
     if (lbImg) {
@@ -39,6 +41,7 @@ function openLightbox(photoNumber) {
             `${base}-1200.webp 1200w`;
 
         lbImg.sizes = '100vw';
+        lbImg.alt = photo.caption;
     }
 
     const captionEl = document.getElementById('lightbox-caption');
@@ -52,9 +55,11 @@ function openLightbox(photoNumber) {
     document.body.style.overflow = 'hidden';
 
     document.addEventListener('keydown', handleLightboxKeyboard);
+
+    const closeBtn = document.getElementById('lightbox-close');
+    if (closeBtn && typeof closeBtn.focus === 'function') closeBtn.focus();
 }
 
-// Закрити лайтбокс
 function closeLightbox() {
     const modal = document.getElementById('lightbox');
     if (!modal) return;
@@ -64,21 +69,26 @@ function closeLightbox() {
     document.body.style.overflow = '';
 
     document.removeEventListener('keydown', handleLightboxKeyboard);
+
+    if (
+        lightboxPreviousFocus &&
+        typeof lightboxPreviousFocus.focus === 'function'
+    ) {
+        lightboxPreviousFocus.focus();
+    }
+    lightboxPreviousFocus = null;
 }
 
-// Наступне фото
 function nextImage() {
     currentPhotoIndex = (currentPhotoIndex + 1) % galleryPhotos.length;
     updateLightbox();
 }
 
-// Попереднє фото
 function prevImage() {
     currentPhotoIndex = (currentPhotoIndex - 1 + galleryPhotos.length) % galleryPhotos.length;
     updateLightbox();
 }
 
-// Оновити фото
 function updateLightbox() {
     const photo = galleryPhotos[currentPhotoIndex];
     if (!photo) return;
@@ -96,6 +106,7 @@ function updateLightbox() {
             `${base}-1200.webp 1200w`;
 
         lbImg.sizes = '100vw';
+        lbImg.alt = photo.caption;
     }
 
     const captionEl = document.getElementById('lightbox-caption');
@@ -105,38 +116,46 @@ function updateLightbox() {
     if (currentEl) currentEl.textContent = currentPhotoIndex + 1;
 }
 
-// Клавіатура
 function handleLightboxKeyboard(e) {
     if (e.key === 'ArrowRight') nextImage();
     if (e.key === 'ArrowLeft') prevImage();
     if (e.key === 'Escape') closeLightbox();
 }
 
-// Touch swipe for mobile (prev/next)
 function initLightboxTouch(modal) {
     if (!modal) return;
     let touchStartX = 0;
-    let touchEndX = 0;
+    let touchStartY = 0;
+
     modal.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
     }, { passive: true });
+
     modal.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
         const minSwipe = 50;
-        if (Math.abs(diff) >= minSwipe) {
-            if (diff > 0) nextImage();
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) >= minSwipe) {
+            if (diffX > 0) nextImage();
             else prevImage();
         }
     }, { passive: true });
 }
 
-// Ініціалізація
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.gallery-item[data-id]').forEach(item => {
         const id = parseInt(item.dataset.id, 10);
         if (!isNaN(id)) {
             item.addEventListener('click', () => openLightbox(id));
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox(id);
+                }
+            });
         }
     });
 
@@ -149,11 +168,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const closeBtn = document.getElementById('lightbox-close');
-    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeLightbox();
+        });
+    }
 
     const prevBtn = document.getElementById('lightbox-prev');
-    if (prevBtn) prevBtn.addEventListener('click', prevImage);
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevImage();
+        });
+    }
 
     const nextBtn = document.getElementById('lightbox-next');
-    if (nextBtn) nextBtn.addEventListener('click', nextImage);
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextImage();
+        });
+    }
 });

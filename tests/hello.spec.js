@@ -1,6 +1,6 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require("@playwright/test");
 
-test('homepage loads correctly', async ({ page }) => {
-    await page.goto('http://localhost:3000');
-    await expect(page).toHaveTitle(/Your Page Title/);
+test("homepage loads correctly", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle(/Centaurus Construction Group/);
 });

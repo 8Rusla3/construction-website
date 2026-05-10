@@ -43,7 +43,7 @@ function testResult(name, passed, details = '') {
 log('blue', '\n📋 FILE STRUCTURE TESTS');
 log('blue', '─'.repeat(50));
 
-const requiredFiles = ['index.html', 'main.js', 'success.html', 'netlify.toml', 'robots.txt'];
+const requiredFiles = ['index.html', 'contact.html', 'styles.css', 'main.js', 'success.html', 'netlify.toml', 'robots.txt'];
 requiredFiles.forEach(file => {
   const exists = fs.existsSync(path.join(__dirname, file));
   testResult(`File exists: ${file}`, exists);
@@ -57,6 +57,8 @@ log('blue', '─'.repeat(50));
 
 const files = {
   'index.html': fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'),
+  'contact.html': fs.readFileSync(path.join(__dirname, 'contact.html'), 'utf8'),
+  'styles.css': fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8'),
   'main.js': fs.readFileSync(path.join(__dirname, 'main.js'), 'utf8'),
   'success.html': fs.readFileSync(path.join(__dirname, 'success.html'), 'utf8'),
 };
@@ -75,9 +77,13 @@ testResult('CSP headers in netlify.toml', fs.readFileSync(path.join(__dirname, '
 log('blue', '\n🏗️  HTML STRUCTURE TESTS');
 log('blue', '─'.repeat(50));
 
-testResult('index.html has doctype', files['index.html'].includes('<!DOCTYPE html>'), 'Missing DOCTYPE');
+testResult(
+  'index.html has doctype',
+  /<!doctype\s+html/i.test(files['index.html']),
+  'Missing DOCTYPE',
+);
 testResult('index.html has meta viewport', files['index.html'].includes('viewport'), 'Not mobile responsive');
-testResult('index.html has semantics', files['index.html'].includes('<header>') && files['index.html'].includes('<main>'), 'Missing semantic HTML');
+testResult('index.html has semantics', files['index.html'].includes('<header') && files['index.html'].includes('<main'), 'Missing semantic HTML');
 testResult('index.html has schema.org markup', files['index.html'].includes('@type'), 'Missing structured data');
 testResult('index.html has accessibility attrs', files['index.html'].includes('aria-label'), 'Missing accessibility attributes');
 testResult('success.html has proper redirect', files['success.html'].includes('success'), 'Form confirmation missing');
@@ -88,14 +94,11 @@ testResult('success.html has proper redirect', files['success.html'].includes('s
 log('blue', '\n📝 FORM FUNCTION TESTS');
 log('blue', '─'.repeat(50));
 
-testResult('Form has name attribute', files['index.html'].includes('form name="appointment"'), 'Netlify form binding missing');
-testResult('Form has email field', files['index.html'].includes('type="email"'), 'Email input missing');
-testResult('Form has phone field', files['index.html'].includes('type="tel"'), 'Phone input missing');
-testResult('Form has date field', files['index.html'].includes('type="date"') && files['index.html'].includes('id="preferred-date"'), 'Date picker missing or not enhanced');
-testResult('Form has time field', files['index.html'].includes('type="time"') && files['index.html'].includes('id="preferred-time"'), 'Time picker missing or not enhanced');
-testResult('Date field is required', files['index.html'].includes('id="preferred-date" required'), 'Date field not required');
-testResult('Time field is required', files['index.html'].includes('id="preferred-time" required'), 'Time field not required');
-testResult('Form has reCAPTCHA', files['index.html'].includes('netlify-recaptcha'), 'Bot protection missing');
+testResult('Estimate form (Netlify)', files['contact.html'].includes('name="estimate"'), 'Netlify form binding missing');
+testResult('Form has email field', files['contact.html'].includes('type="email"'), 'Email input missing');
+testResult('Form has phone field', files['contact.html'].includes('type="tel"'), 'Phone input missing');
+testResult('Form has message field', files['contact.html'].includes('name="message"'), 'Message field missing');
+testResult('Honeypot spam field', files['contact.html'].includes('bot-field'), 'Honeypot missing');
 
 // ============================================
 // JAVASCRIPT FUNCTIONS TESTS
@@ -105,12 +108,8 @@ log('blue', '─'.repeat(50));
 
 const functions = [
   'sanitizeInput',
-  'sanitizeObject',
   'safeLocalStorage',
   'initMobileMenu',
-  'debounce',
-  'initActiveNav',
-  'initGallery',
   'initFormValidation',
   'validateField',
   'initPhoneFormatting',
@@ -140,11 +139,11 @@ log('blue', '─'.repeat(50));
 
 testResult('Gallery container exists', files['index.html'].includes('id="gallery"'), 'Gallery not found');
 testResult('Lightbox modal exists', files['index.html'].includes('id="lightbox"'), 'Lightbox not found');
-testResult('FAQ section exists', files['index.html'].includes('accordion-item'), 'FAQ accordion not found');
+testResult('FAQ section exists', files['contact.html'].includes('accordion-item'), 'FAQ accordion not found');
 testResult('Lead magnet popup exists', files['index.html'].includes('id="lead-magnet-popup"'), 'Lead magnet missing');
 testResult('Hero section exists', files['index.html'].includes('class="hero"'), 'Hero section missing');
-testResult('Contact section exists', files['index.html'].includes('id="contact"'), 'Contact section missing');
-testResult('Header exists', files['index.html'].includes('<header>'), 'Header missing');
+testResult('Contact page exists', files['contact.html'].includes('contact-layout'), 'Contact layout missing');
+testResult('Header exists', files['index.html'].includes('<header'), 'Header missing');
 testResult('Footer exists', files['index.html'].includes('<footer>') || files['index.html'].includes('footer'), 'Footer missing');
 
 // ============================================
@@ -153,21 +152,14 @@ testResult('Footer exists', files['index.html'].includes('<footer>') || files['i
 log('blue', '\n🎯 CSS VARIABLES & STYLING TESTS');
 log('blue', '─'.repeat(50));
 
-const cssVars = [
-  '--primary: #003d7a',
-  '--accent: #ff9800',
-  '--bg: #ffffff',
-  '--text: #1a1a1a',
-  '--white: #ffffff',
-];
+const cssVars = ['--primary:', '--accent:', '--bg:', '--text:'];
 
 cssVars.forEach(cssVar => {
-  const varName = cssVar.split(':')[0];
-  testResult(`CSS var exists: ${varName}`, files['index.html'].includes(cssVar), `Color mismatch: expected "${cssVar}"`);
+  testResult(`CSS var exists: ${cssVar}`, files['styles.css'].includes(cssVar), 'Missing design token in styles.css');
 });
 
-testResult('No dark mode colors', !files['index.html'].includes('#0d1117') && !files['index.html'].includes('dark-mode'), 'Dark mode code found');
-testResult('Light theme only', files['index.html'].includes('--bg: #ffffff'), 'Background not pure white');
+testResult('No dark mode colors', !files['styles.css'].includes('#0d1117') && !files['index.html'].includes('dark-mode'), 'Dark mode code found');
+testResult('Light surfaces', files['styles.css'].includes('--surface:'), 'Surface token missing');
 
 // ============================================
 // RESPONSIVE DESIGN TESTS
@@ -176,7 +168,7 @@ log('blue', '\n📱 RESPONSIVE DESIGN TESTS');
 log('blue', '─'.repeat(50));
 
 testResult('Mobile menu (hamburger) exists', files['index.html'].includes('hamburger'), 'Mobile menu not found');
-testResult('Mobile breakpoints defined', files['index.html'].includes('@media (max-width:'), 'No responsive breakpoints');
+testResult('Mobile breakpoints defined', files['styles.css'].includes('@media'), 'No responsive breakpoints');
 testResult('Touch events handled', files['main.js'].includes('addEventListener') || files['main.js'].includes('click'), 'Touch events not handled');
 testResult('Viewport meta tag', files['index.html'].includes('viewport-fit=cover'), 'Notch support missing');
 
@@ -186,7 +178,11 @@ testResult('Viewport meta tag', files['index.html'].includes('viewport-fit=cover
 log('blue', '\n♿ ACCESSIBILITY TESTS');
 log('blue', '─'.repeat(50));
 
-testResult('Labels for form inputs', files['index.html'].includes('<label>'), 'Form labels missing');
+testResult(
+  'Labels for form inputs',
+  files['contact.html'].includes('<label'),
+  'Form labels missing',
+);
 testResult('Alt text for images', files['index.html'].includes('alt='), 'Image alt text missing');
 testResult('ARIA labels', files['index.html'].includes('aria-label'), 'ARIA labels missing');
 testResult('Semantic HTML used', files['index.html'].includes('section') && files['index.html'].includes('article'), 'Not using semantic HTML');
@@ -198,7 +194,7 @@ testResult('Motion preferences respected', files['main.js'].includes('prefers-re
 log('blue', '\n⚡ PERFORMANCE TESTS');
 log('blue', '─'.repeat(50));
 
-testResult('Debounce implemented', files['main.js'].includes('debounce'), 'Debounce not found');
+testResult('Shared stylesheet linked', files['index.html'].includes('styles.css'), 'styles.css not linked');
 testResult('Lazy loading image support', files['main.js'].includes('IntersectionObserver'), 'Lazy loading not implemented');
 testResult('Passive event listeners', files['main.js'].includes('{ passive: true }'), 'Passive listeners not used');
 testResult('CSS minification potential', true, 'CSS could be minified');
@@ -209,8 +205,8 @@ testResult('CSS minification potential', true, 'CSS could be minified');
 log('blue', '\n📤 FORM SUBMISSION TESTS');
 log('blue', '─'.repeat(50));
 
-testResult('Appointment form exists', files['index.html'].includes('name="appointment"'), 'Form binding missing');
-testResult('Callback form exists', files['index.html'].includes('name="callback"'), 'Callback form missing');
+testResult('Estimate form exists', files['contact.html'].includes('name="estimate"'), 'Form binding missing');
+testResult('Callback form exists', files['contact.html'].includes('name="callback"'), 'Callback form missing');
 testResult('Lead magnet form exists', files['index.html'].includes('name="lead-magnet"'), 'Lead magnet form missing');
 testResult('Form double-submit protection', files['main.js'].includes('submitted') || files['main.js'].includes('disabled'), 'No double-submit protection');
 
