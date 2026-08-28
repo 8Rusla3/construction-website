@@ -826,6 +826,20 @@ main > .hero:first-child {
   color: var(--primary-mid);
 }
 
+@media (min-width: 720px) {
+  #gallery .gallery-grid {
+    width: min(100%, 780px);
+    margin-inline: auto;
+    justify-content: center;
+  }
+
+  #reviews .reviews-cta {
+    grid-column: 1 / -1;
+    width: min(100%, 330px);
+    justify-self: center;
+  }
+}
+
 .reviews-cta {
   display: flex;
   flex-direction: column;
@@ -1716,6 +1730,55 @@ main > .hero:first-child {
 
   .mobile-call:hover {
     text-decoration: none;
+  }
+}
+
+/* Desktop call-to-action */
+@media (min-width: 720px) {
+  .mobile-call {
+    display: inline-flex;
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 200;
+    align-items: center;
+    gap: 9px;
+    min-height: 48px;
+    padding: 13px 20px;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--primary);
+    box-shadow: 0 8px 22px rgba(10, 39, 68, 0.2);
+    font-size: 0.9375rem;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      transform 160ms ease;
+  }
+
+  .mobile-call::before {
+    content: "\260e";
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .mobile-call:hover {
+    border-color: var(--accent-hover);
+    background: var(--accent-hover);
+    color: var(--primary);
+    box-shadow: 0 10px 26px rgba(10, 39, 68, 0.26);
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  .mobile-call:focus-visible {
+    outline: 3px solid rgba(232, 148, 42, 0.45);
+    outline-offset: 3px;
   }
 }
 
