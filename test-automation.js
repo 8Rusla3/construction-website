@@ -69,7 +69,13 @@ testResult('No console.log in production code', !files['main.js'].match(/console
 testResult('No process.env in browser code', !files['main.js'].includes('process.env'), 'Node.js environment leaked');
 testResult('No dark mode code remnants', !files['index.html'].includes('dark-mode'), 'Color scheme conflict');
 testResult('No dark-mode meta tag', !files['index.html'].includes('supported-color-schemes'), 'System color scheme detection');
-testResult('CSP headers in netlify.toml', fs.readFileSync(path.join(__dirname, 'netlify.toml'), 'utf8').includes('Content-Security-Policy'), 'Missing security headers');
+const netlifyToml = fs.readFileSync(path.join(__dirname, 'netlify.toml'), 'utf8');
+testResult('CSP headers in netlify.toml', netlifyToml.includes('Content-Security-Policy'), 'Missing security headers');
+testResult(
+  'CSP allows GA4 regional endpoints',
+  netlifyToml.includes('https://*.google-analytics.com') && netlifyToml.includes('https://*.analytics.google.com'),
+  'GA4 collection may be blocked by CSP',
+);
 
 // ============================================
 // HTML STRUCTURE TESTS
