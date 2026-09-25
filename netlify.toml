@@ -1,6 +1,26 @@
 [build]
   publish = "."
 
+[[redirects]]
+  from = "/drain-repair-mississauga.html"
+  to = "/drain-repair-east-york.html"
+  status = 301
+
+[[redirects]]
+  from = "/drain-repair-gta.html"
+  to = "/drain-repair-east-york.html"
+  status = 301
+
+[[redirects]]
+  from = "/camera-inspection-mississauga.html"
+  to = "/camera-inspection-gta.html"
+  status = 301
+
+[[redirects]]
+  from = "/sewer-line-repair-mississauga.html"
+  to = "/sewer-line-repair-gta.html"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

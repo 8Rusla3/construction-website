@@ -10,6 +10,17 @@ const pages = [
   { path: "/gallery.html", title: /Gallery/ },
   { path: "/contact.html", title: /Free Estimate|Contact/ },
   { path: "/success.html", title: /Message Received|Success|Thank you/ },
+  { path: "/drain-repair-east-york.html", title: /Drain Repair/ },
+  {
+    path: "/basement-waterproofing-gta.html",
+    title: /Basement Waterproofing/,
+  },
+  {
+    path: "/camera-inspection-gta.html",
+    title: /Sewer Camera Inspection/,
+  },
+  { path: "/sewer-line-repair-gta.html", title: /Sewer Line Repair/ },
+  { path: "/service-areas.html", title: /Service Areas/ },
 ];
 
 test.describe("Page load and SEO checks", () => {
